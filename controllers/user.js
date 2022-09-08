@@ -8,7 +8,7 @@ const userGet = async(req = request, res = response) => {
     const [total, usuarios] = await Promise.all([
         Usuario.countDocuments({status: true}),
         Usuario.find({ status: true})
-        .skip(Number(since))    
+        .skip(Number(since))    //todo
         .limit(Number(limit))
     ])
     res.json({
@@ -29,7 +29,6 @@ const userPost = async(req, res = response) => {
 const userPut = async(req, res = response) => {
     const {id} = req.params;
     const { _id, password, google, email, ...resto } = req.body;
-    // TODO VALIDAR CONTRA BASE DE DATOS
     if( password ) {
         const salt = bcryptjs.genSaltSync();
         resto.password = bcryptjs.hashSync( password, salt);
@@ -46,7 +45,6 @@ const userDelete = async(req, res = response) => {
     const { id } = req.params
 
     const user = await Usuario.findByIdAndUpdate(id, { status: false})
-
     res.json({
         user
     });

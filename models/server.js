@@ -5,8 +5,9 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.flyPath = '/api/usuarios'
-        this.userPath = '/api/vuelos'
+        this.flyPath = '/api/vuelos';
+        this.userPath = '/api/usuarios';
+        this.authPath = '/api/auth';
         this.port = process.env.PORT
         // Connect DB
         this.connectDB();
@@ -30,13 +31,14 @@ class Server {
 
     routes() {
         //Middleware Conditional
-         this.app.use(this.userPath, require('../routes/fly'))
-         this.app.use(this.flyPath, require('../routes/user'))
+        this.app.use(this.authPath, require('../routes/auth'));
+        this.app.use(this.flyPath, require('../routes/fly'));
+        this.app.use(this.userPath, require('../routes/user'));
     }
 
     listen() {
         this.app.listen(this.port, () => {
-            console.log('Listening Backend in port ' + this.port)
+            console.log('Listening Backend in port ' + this.port);
         });
     }
 }
