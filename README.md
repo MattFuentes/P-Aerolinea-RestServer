@@ -5,6 +5,3 @@
 
 // Inicio
 ```nodemon index.js```
-
-// Produccion
-```https://restsv-back-matt.herokuapp.com```
