@@ -1,19 +1,13 @@
 const { Router } = require('express');
-const { check } = require('express-validator');
 const { login, googleSignIn } = require('../controllers/auth');
-const { validateModules } = require('../middlewares/validate-modules');
+const { validatePostAuth, validatePostAuthGoogle } = require('../middlewares/validate-routes');
 
 const router = Router();
 
-router.post('/login',[
-    check('email','El correo es obligatorio').isEmail(),
-    check('password','La contraseña es obligatoria').not().isEmpty(),
-    validateModules
-], login);
+// Post LOGIN WEB
+router.post('/login', validatePostAuth, login);
 
-router.post('/google',[
-    check('id_token', 'id_token es necesario').not().isEmpty(),
-    validateModules
-], googleSignIn)
+// Post LOGIN with GOOGLE ACCOUNT
+router.post('/google', validatePostAuthGoogle, googleSignIn)
 
 module.exports = router;

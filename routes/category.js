@@ -1,48 +1,22 @@
 const { Router } = require('express');
-const { check } = require('express-validator');
 const { createCategory, getCategories, getCategory, putCategory, deleteCategory } = require('../controllers/category');
-const { isCategoryPerId } = require('../helpers/db-validator');
-const { isAdminRole } = require('../middlewares');
-const { validateJWT } = require('../middlewares/validate-jwt');
-
-const { validateModules } = require('../middlewares/validate-modules');
+const { validatePostCategory, validateGetCategory, validatePutCategory, validateDeleteCategory } = require('../middlewares/validate-routes');
 
 const router = Router();
 
-
-// Obtener categorias - publico
+// GET Categorias - ALL
 router.get('/', getCategories);
 
-// Obtener una categoria por id - publico
-router.get('/:id', [
-    check('id', 'No es un ID de MONGO Valido').isMongoId(),
-    check('id').custom(isCategoryPerId),
-    validateModules,
-], getCategory);
+// GET Categoria by ID
+router.get('/:id', validateGetCategory, getCategory);
 
-// Crear categoria - Privado - cualquier persona con token
-router.post('/', [ 
-    validateJWT,
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
-    validateModules
-], createCategory);
+// POST Crear categoria
+router.post('/', validatePostCategory, createCategory);
 
-// Actualizar registro
-router.put('/:id',[
-    validateJWT,
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
-    check('id').custom(isCategoryPerId),
-    validateModules,
-], putCategory);
+// PUT Actualizar categoria
+router.put('/:id', validatePutCategory, putCategory);
 
-// Borrar categoria - ADMIN
-router.delete('/:id',[
-    validateJWT,
-    isAdminRole,
-    check('id', 'No es un ID de MONGO Valido').isMongoId(),
-    check('id').custom(isCategoryPerId),
-    validateModules,
-], deleteCategory);
-
+// DELETE Borrar categoria
+router.delete('/:id', validateDeleteCategory, deleteCategory);
 
 module.exports = router;
